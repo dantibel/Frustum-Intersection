@@ -39,8 +39,8 @@ AIntersectionVisualizer::AIntersectionVisualizer()
 	Quadangle->SetMeshSectionVisible(0, true);
 	Quadangle->SetRelativeLocation(FVector(0., 0., 0.));
 
-	//static ConstructorHelpers::FObjectFinder<UMaterialInstance> material_asset(TEXT("C:/projects/Dan/Task1/Content/PlaneMaterial.uasset"));
-	static ConstructorHelpers::FObjectFinder<UMaterial> material_asset(TEXT("/Game/PlaneMaterial"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> material_asset(TEXT("/Game/SolidColor_green"));
+	// static ConstructorHelpers::FObjectFinder<UMaterial> material_asset(TEXT("/Game/PlaneMaterial"));
 	if (material_asset.Succeeded())
 	{
 		IntersectionMaterial = UMaterialInstanceDynamic::Create(material_asset.Object, nullptr);
@@ -118,8 +118,8 @@ void AIntersectionVisualizer::Tick(float DeltaTime)
 			GEngine->AddOnScreenDebugMessage(output_index++, 10000.f, FColor::Cyan, FString::Printf(TEXT("Intersection #%i location: %f, %f, %f"), i, Intersects[i].X, Intersects[i].Y, Intersects[i].Z));
 
 		// update quadangle geometry
-		// const TArray<FVector> vertices(Intersects, 4);
-		const TArray<FVector> vertices {{ 0., 0., 0. }, { 0., 0., 0. }, { 0., 0., 0. }, { 0., 0., 0. }};
+		const TArray<FVector> vertices(Intersects, 4);
+		// const TArray<FVector> vertices {{ 0., 0., 0. }, { 0., 0., 0. }, { 0., 0., 0. }, { 0., 0., 0. }};
 		IntersectionMaterial->SetVectorParameterValue("Position0", Intersects[bottomLeft]);
 		IntersectionMaterial->SetVectorParameterValue("Position1", Intersects[topLeft]);
 		IntersectionMaterial->SetVectorParameterValue("Position2", Intersects[topRight]);
@@ -130,7 +130,7 @@ void AIntersectionVisualizer::Tick(float DeltaTime)
 		// IntersectionMaterial->SetVectorParameterValue("Position3", FVector4(1., 1., 0., 1.));
 
 		Quadangle->SetRelativeLocation({ 0., 0., 0. });
-		// Quadangle->UpdateMeshSection(0, vertices, {}, QuadangleTexCoords, {}, {}, {}, {}, {});
+		Quadangle->UpdateMeshSection(0, vertices, {}, QuadangleTexCoords, {}, {}, {}, {}, {});
 	}
 	else // no intersection update
 		for (size_t i = 0; i < 4; i++)
